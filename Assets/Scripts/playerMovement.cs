@@ -45,6 +45,7 @@ public class playerMovement : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        //this is a merge conflict
         //UnityEngine.Debug.Log("it is touching");//this should be deleted at the release stage
         float offSetY = collision.gameObject.transform.localScale.y/2;
         float collPosY = collision.gameObject.transform.position.y;
