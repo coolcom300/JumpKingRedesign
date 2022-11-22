@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Security;
 using System.Security.Cryptography;
 using UnityEngine;
 
 public class playerMovement : MonoBehaviour
 {
+    public PhysicsMaterial2D bounceMat, groundMat;
+
     public float jumpPowerMax;
+    public float sidejumpPowerMax;
     public float jumpPower;
     public float timer;
     public float walkSpeed;
@@ -23,6 +27,7 @@ public class playerMovement : MonoBehaviour
     bool canWalkR = true;
     bool canWalkL = true;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,122 +35,85 @@ public class playerMovement : MonoBehaviour
         trans = GetComponent<Transform>();
         spriteRend = GetComponent<SpriteRenderer>();
         GetOffSet();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        //SetZero();
+        
         Walk();
         SpriteStuff();
         Jump();
+        
     }
     
 //Start of Created Methods/Functions
 
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        
+        if (collision.tag != "Player")
+        {
+            if (canJump == false)
+            {
+                body.sharedMaterial = bounceMat;
+                UnityEngine.Debug.Log("enter");
+                UnityEngine.Debug.Log(body.sharedMaterial);
+            }
+
+        }
+        
+    }
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        //string tagVar = collision.Get();
+        if (collision.tag != "Player")
+        {
+            body.sharedMaterial = groundMat;
+            UnityEngine.Debug.Log("exit");
+            UnityEngine.Debug.Log(body.sharedMaterial);
+        }
+
+    }
+    
+
     void OnCollisionEnter2D(Collision2D collision)
     {
-        //UnityEngine.Debug.Log("it is touching");//this should be deleted at the release stage
-        float offSetY = collision.gameObject.transform.localScale.y/2;
-        float collPosY = collision.gameObject.transform.position.y;
-        float offSetX = collision.gameObject.transform.localScale.x / 2;
-        float collPosX = collision.gameObject.transform.position.x;
-        if (trans.position.y > collPosY + offSetY)
+        if (body.sharedMaterial == groundMat)
         {
-            //trans.position = new Vector2(trans.position.x,collPosY + offSetY);
-            //trans.position.y == collPosY + offSetY + playerOffSetY;
-            //trans.position.x = collPosX + offSetX + playerOffSetX;
+            body.velocity = new Vector3(0f, 0f, 0f);
             canJump = true;
             canWalkR = true;
             canWalkL = true;
-
         }
-        if (!canJump)
-        {
-            if (trans.position.x > collPosX + offSetX)
-            {
-                body.AddForce(transform.right * jumpPowerMax / 2, ForceMode2D.Impulse);
-                UnityEngine.Debug.Log("enter bounce");
-                //body.velocity = new Vector2(-body.velocity.x,body.velocity.y);
-            }
-            if (trans.position.x < collPosX - offSetX)
-            {
-                body.AddForce(-transform.right * jumpPowerMax / 2, ForceMode2D.Impulse);
-                UnityEngine.Debug.Log("enter bounce");
-                //body.velocity = new Vector2(-body.velocity.x, body.velocity.y);
-                //body.velocity.x = -body.velocity.x;
-            }
-        }
-        if (trans.position.x < collPosX - offSetX)//Right walk off
-        {
-            canWalkR = false;
-
-        }
-
-        if (trans.position.x > collPosX + offSetX)//Left walk off
-        {
-            canWalkL = false;
-
-
-        }
+        
     }
 
     void OnCollisionStay2D(Collision2D collision)
     {
-        canJump = true;
+        if (collision.gameObject.tag == "Ground") 
+        { 
+            canJump = true;
+        }
+        //UnityEngine.Debug.Log("col stay");
+
+        
     }
-    //{
-    //    float offSetX = collision.gameObject.transform.localScale.x / 2;
-    //    float collPosX = collision.gameObject.transform.position.x;
-    //    if (trans.position.x > collPosX + offSetX)
-    //    {
-    //        body.AddForce(transform.right * jumpPowerMax / 2, ForceMode2D.Impulse);
-    //        UnityEngine.Debug.Log("stay bounce");
-    //        //body.velocity = new Vector2(-body.velocity.x,body.velocity.y);
-    //    }
-    //    if (trans.position.x < collPosX - offSetX)
-    //    {
-    //        body.AddForce(-transform.right * jumpPowerMax / 2, ForceMode2D.Impulse);
-    //        UnityEngine.Debug.Log("stay bounce");
-    //        //body.velocity = new Vector2(-body.velocity.x, body.velocity.y);
-    //        //body.velocity.x = -body.velocity.x;
-    //    }
-    //}
 
     void OnCollisionExit2D(Collision2D collision)
     {
-
-        float offSetX = collision.gameObject.transform.localScale.x / 2;
-        float collPosX = collision.gameObject.transform.position.x;
-        if (trans.position.x < collPosX - offSetX)//Right
-        {
-            canWalkR = true;
-
-        }
-
-        if (trans.position.x > collPosX + offSetX)//Left
-        {
-            canWalkL = true;
-
-
-        }
-        //float offSetY = collision.gameObject.transform.localScale.y / 2;
-        //float collPosY = collision.gameObject.transform.position.y;
-        //if (trans.position.y > collPosY - offSetY) 
-        //{ 
-            canJump = false;
-        //}
+        canJump = false;
+        
     }
 
-    void GetOffSet()
+    void GetOffSet()// gets the players offset for other methods
     {
         playerOffSetX = trans.localScale.x / 2;
         playerOffSetY = trans.localScale.y / 2;
-        //return playerOffSetX;
-        //return playerOffSetY;
     }
 
-    void SpriteStuff()
+    void SpriteStuff()//for rendering sprites
     {
         if (faceingRight)
         {
@@ -155,9 +123,10 @@ public class playerMovement : MonoBehaviour
         {
             spriteRend.flipX = true;
         }
+        
     }
 
-    void Walk()
+    void Walk()//the walk function
     {
         if (canJump) 
         { 
@@ -166,8 +135,13 @@ public class playerMovement : MonoBehaviour
                 if (canWalkR == true)
                 {
                     trans.position += transform.right * walkSpeed * Time.deltaTime;
+                    //if(trans.position.x > -80f){
+                    //    canWalkR = false;
+                    //    UnityEngine.Debug.Log("f");
+                    //}
                     faceingRight = true;
                     trans.rotation = Quaternion.Euler(0, 0, 0);
+                    canWalkL = true;
                 }
             }
             if (Input.GetKey(KeyCode.A))// A to move -right at walkSpeed
@@ -177,6 +151,7 @@ public class playerMovement : MonoBehaviour
                     trans.position += -transform.right * walkSpeed * Time.deltaTime;
                     faceingRight = false;
                     trans.rotation = Quaternion.Euler(0, 0, 0);
+                    canWalkR = true;
                 }
             }
         }
@@ -187,15 +162,11 @@ public class playerMovement : MonoBehaviour
         body.rotation = 0;
         body.angularVelocity = 0;
         trans.rotation = Quaternion.Euler(0, 0, 0);
-        if (canJump)
-        {
-            body.velocity = new Vector2(0,body.velocity.y);
-        }
         
     }
 
 
-    void Jump()
+    void Jump()//the jump function
     {
         if (Input.GetKeyUp(KeyCode.Space)|| atMaxJump)
         {
@@ -204,26 +175,27 @@ public class playerMovement : MonoBehaviour
                 timer = chargeTime;
             }
             jumpPower = timer / chargeTime;
-        
-        
+
+
             body.AddForce(transform.up * jumpPowerMax * jumpPower, ForceMode2D.Impulse);
             if (Input.GetKey(KeyCode.D))
             {
-                body.AddForce(transform.right * 1.5f * jumpPowerMax * jumpPower, ForceMode2D.Impulse);
+                body.AddForce(transform.right * sidejumpPowerMax * jumpPower, ForceMode2D.Impulse);
             }
-            if (Input.GetKey(KeyCode.D))
+            if (Input.GetKey(KeyCode.A))
             {
-                body.AddForce(-transform.right * 1.5f * jumpPowerMax * jumpPower, ForceMode2D.Impulse);
+                body.AddForce(-transform.right * sidejumpPowerMax * jumpPower, ForceMode2D.Impulse);
             }
             canJump = false;
             atMaxJump = false;
             timer = 0;
+            UnityEngine.Debug.Log("jump");
         }
 
         
     }
 
-    void ChargeJump()
+    void ChargeJump()//charges Jump
     {
         if (canJump)
         {
@@ -240,6 +212,7 @@ public class playerMovement : MonoBehaviour
 
     void FixedUpdate()// uses jump
     {
+ 
         if (Input.GetKey(KeyCode.Space))
         {
             ChargeJump();
