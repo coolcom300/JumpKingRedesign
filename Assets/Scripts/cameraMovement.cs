@@ -36,9 +36,9 @@ public class cameraMovement : MonoBehaviour
     {
         float camheight;
         camheight = playerobj.transform.position.y;
-        if(camheight <= -80)
+        if(camheight <= 15)
         {
-            camheight = -80;
+            camheight = 15;
         }
         trans.position = new Vector3(trans.position.x, camheight , trans.position.z); 
     }
