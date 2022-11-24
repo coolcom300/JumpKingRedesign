@@ -20,12 +20,20 @@ public class playerMovement : MonoBehaviour
     public float playerOffSetY;
     public float chargeTime;
     bool atMaxJump;
+    public float height;
+    public float walkOffSpeed;
+
+    bool enter = false;
+
     Rigidbody2D body;
     Transform trans;
     SpriteRenderer spriteRend;
 
     bool canWalkR = true;
     bool canWalkL = true;
+
+    bool once;
+    //Vector3 initialGravity = Physics2D.gravity;
 
 
     // Start is called before the first frame update
@@ -36,23 +44,26 @@ public class playerMovement : MonoBehaviour
         spriteRend = GetComponent<SpriteRenderer>();
         GetOffSet();
 
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
         Walk();
         SpriteStuff();
         Jump();
-        
+        // changeGravity();
+
+
     }
-    
-//Start of Created Methods/Functions
+
+    //Start of Created Methods/Functions
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        
+
         if (collision.tag != "Player")
         {
             if (canJump == false)
@@ -63,7 +74,7 @@ public class playerMovement : MonoBehaviour
             }
 
         }
-        
+
     }
     void OnTriggerExit2D(Collider2D collision)
     {
@@ -76,7 +87,7 @@ public class playerMovement : MonoBehaviour
         }
 
     }
-    
+
 
     void OnCollisionEnter2D(Collision2D collision)
     {
@@ -87,24 +98,24 @@ public class playerMovement : MonoBehaviour
             canWalkR = true;
             canWalkL = true;
         }
-        
+
     }
 
     void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Ground") 
-        { 
+        if (collision.gameObject.tag == "Ground")
+        {
             canJump = true;
         }
         //UnityEngine.Debug.Log("col stay");
 
-        
+
     }
 
     void OnCollisionExit2D(Collision2D collision)
     {
         canJump = false;
-        
+
     }
 
     void GetOffSet()// gets the players offset for other methods
@@ -123,13 +134,14 @@ public class playerMovement : MonoBehaviour
         {
             spriteRend.flipX = true;
         }
-        
+
     }
 
     void Walk()//the walk function
     {
-        if (canJump) 
-        { 
+        if (canJump)
+        {
+            enter = false;
             if (Input.GetKey(KeyCode.D))// D to move right at walkSpeed
             {
                 if (canWalkR == true)
@@ -142,7 +154,9 @@ public class playerMovement : MonoBehaviour
                     faceingRight = true;
                     trans.rotation = Quaternion.Euler(0, 0, 0);
                     canWalkL = true;
+                    enter = true;
                 }
+
             }
             if (Input.GetKey(KeyCode.A))// A to move -right at walkSpeed
             {
@@ -152,9 +166,31 @@ public class playerMovement : MonoBehaviour
                     faceingRight = false;
                     trans.rotation = Quaternion.Euler(0, 0, 0);
                     canWalkR = true;
+                    enter = true;
                 }
             }
+            once = true;
         }
+
+        //4 works for walk off speed
+        else
+        {
+            if (faceingRight && enter && once)
+            {
+
+                body.AddForce(transform.right * walkOffSpeed, ForceMode2D.Impulse);
+                once = false;
+            }
+
+            if (!faceingRight && enter && once)
+            {
+                body.AddForce(-transform.right * walkOffSpeed, ForceMode2D.Impulse);
+                once = false;
+            }
+
+        }
+
+
     }
 
     void SetZero()//sets some values to zero to prevent sliding || or rotating
@@ -162,14 +198,16 @@ public class playerMovement : MonoBehaviour
         body.rotation = 0;
         body.angularVelocity = 0;
         trans.rotation = Quaternion.Euler(0, 0, 0);
-        
+
     }
 
 
     void Jump()//the jump function
     {
-        if (Input.GetKeyUp(KeyCode.Space)|| atMaxJump)
+        if (Input.GetKeyUp(KeyCode.Space) || atMaxJump)
         {
+            //enter = true;
+
             if (timer > chargeTime)//sets for max
             {
                 timer = chargeTime;
@@ -180,6 +218,7 @@ public class playerMovement : MonoBehaviour
             body.AddForce(transform.up * jumpPowerMax * jumpPower, ForceMode2D.Impulse);
             if (Input.GetKey(KeyCode.D))
             {
+
                 body.AddForce(transform.right * sidejumpPowerMax * jumpPower, ForceMode2D.Impulse);
                 faceingRight = true;
             }
@@ -194,7 +233,9 @@ public class playerMovement : MonoBehaviour
             UnityEngine.Debug.Log("jump");
         }
 
-        
+
+
+
     }
 
     void ChargeJump()//charges Jump
@@ -214,11 +255,28 @@ public class playerMovement : MonoBehaviour
 
     void FixedUpdate()// uses jump
     {
- 
+
         if (Input.GetKey(KeyCode.Space))
         {
             ChargeJump();
         }
 
     }
+
+    void changeGravity()
+    {
+        // height = body.position.y;
+        //height = height
+
+        // Physics2D.gravity = new Vector2(0, -5);
+
+
+
+
+        // body.gravityScale = 1;
+    }
 }
+
+
+
+
