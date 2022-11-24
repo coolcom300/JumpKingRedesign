@@ -20,12 +20,20 @@ public class playerMovement : MonoBehaviour
     public float playerOffSetY;
     public float chargeTime;
     bool atMaxJump;
+    public float height;
+    public float walkOffSpeed = 1.5f;
+
+    bool enter = false;
+    
     Rigidbody2D body;
     Transform trans;
     SpriteRenderer spriteRend;
 
     bool canWalkR = true;
     bool canWalkL = true;
+
+    bool once;
+    //Vector3 initialGravity = Physics2D.gravity;
 
 
     // Start is called before the first frame update
@@ -35,6 +43,7 @@ public class playerMovement : MonoBehaviour
         trans = GetComponent<Transform>();
         spriteRend = GetComponent<SpriteRenderer>();
         GetOffSet();
+        
 
     }
 
@@ -45,8 +54,10 @@ public class playerMovement : MonoBehaviour
         Walk();
         SpriteStuff();
         Jump();
+       // changeGravity();
         
-    }
+
+}
     
 //Start of Created Methods/Functions
 
@@ -129,7 +140,8 @@ public class playerMovement : MonoBehaviour
     void Walk()//the walk function
     {
         if (canJump) 
-        { 
+        {
+            enter = false;
             if (Input.GetKey(KeyCode.D))// D to move right at walkSpeed
             {
                 if (canWalkR == true)
@@ -142,7 +154,8 @@ public class playerMovement : MonoBehaviour
                     faceingRight = true;
                     trans.rotation = Quaternion.Euler(0, 0, 0);
                     canWalkL = true;
-                }
+                    enter = true;                }
+                
             }
             if (Input.GetKey(KeyCode.A))// A to move -right at walkSpeed
             {
@@ -152,9 +165,31 @@ public class playerMovement : MonoBehaviour
                     faceingRight = false;
                     trans.rotation = Quaternion.Euler(0, 0, 0);
                     canWalkR = true;
+                    enter = true;
                 }
             }
+            once = true;
         }
+
+        //4 works for walk off speed
+        else
+        {
+            if(faceingRight && enter && once)
+            {
+                
+                body.AddForce(transform.right * walkOffSpeed, ForceMode2D.Impulse);
+                once = false;
+            }
+
+            if(!faceingRight && enter && once)
+            {
+                body.AddForce(-transform.right * walkOffSpeed, ForceMode2D.Impulse);
+                once = false;
+            }
+
+        }
+
+        
     }
 
     void SetZero()//sets some values to zero to prevent sliding || or rotating
@@ -170,6 +205,8 @@ public class playerMovement : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.Space)|| atMaxJump)
         {
+            //enter = true;
+
             if (timer > chargeTime)//sets for max
             {
                 timer = chargeTime;
@@ -180,6 +217,7 @@ public class playerMovement : MonoBehaviour
             body.AddForce(transform.up * jumpPowerMax * jumpPower, ForceMode2D.Impulse);
             if (Input.GetKey(KeyCode.D))
             {
+
                 body.AddForce(transform.right * sidejumpPowerMax * jumpPower, ForceMode2D.Impulse);
             }
             if (Input.GetKey(KeyCode.A))
@@ -191,6 +229,8 @@ public class playerMovement : MonoBehaviour
             timer = 0;
             UnityEngine.Debug.Log("jump");
         }
+
+        
 
         
     }
@@ -218,5 +258,18 @@ public class playerMovement : MonoBehaviour
             ChargeJump();
         }
 
+    }
+
+    void changeGravity()
+    {
+       // height = body.position.y;
+        //height = height
+
+       // Physics2D.gravity = new Vector2(0, -5);
+
+        
+
+        
+       // body.gravityScale = 1;
     }
 }
