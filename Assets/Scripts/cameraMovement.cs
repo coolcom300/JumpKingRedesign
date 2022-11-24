@@ -34,7 +34,13 @@ public class cameraMovement : MonoBehaviour
     // Daniels camera code
     void FollowPlayer()
     {
-        trans.position = new Vector3(trans.position.x, playerobj.transform.position.y, trans.position.z); 
+        float camheight;
+        camheight = playerobj.transform.position.y;
+        if(camheight <= 15)
+        {
+            camheight = 15;
+        }
+        trans.position = new Vector3(trans.position.x, camheight , trans.position.z); 
     }
     // Christians camera code
     void OnTriggerExit2D(Collider2D collision)

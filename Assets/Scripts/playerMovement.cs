@@ -219,10 +219,12 @@ public class playerMovement : MonoBehaviour
             {
 
                 body.AddForce(transform.right * sidejumpPowerMax * jumpPower, ForceMode2D.Impulse);
+                faceingRight = true;
             }
             if (Input.GetKey(KeyCode.A))
             {
                 body.AddForce(-transform.right * sidejumpPowerMax * jumpPower, ForceMode2D.Impulse);
+                faceingRight = false;
             }
             canJump = false;
             atMaxJump = false;
