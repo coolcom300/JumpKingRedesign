@@ -33,6 +33,7 @@ public class playerMovement : MonoBehaviour
     bool canWalkL = true;
 
     bool once;
+    bool wall;
     //Vector3 initialGravity = Physics2D.gravity;
 
 
@@ -43,7 +44,7 @@ public class playerMovement : MonoBehaviour
         trans = GetComponent<Transform>();
         spriteRend = GetComponent<SpriteRenderer>();
         GetOffSet();
-        
+
 
 
     }
@@ -55,7 +56,7 @@ public class playerMovement : MonoBehaviour
         Walk();
         SpriteStuff();
         Jump();
-        // changeGravity();
+        changeGravity();
 
 
     }
@@ -70,8 +71,8 @@ public class playerMovement : MonoBehaviour
             if (canJump == false)
             {
                 body.sharedMaterial = bounceMat;
-                UnityEngine.Debug.Log("enter");
-                UnityEngine.Debug.Log(body.sharedMaterial);
+                //UnityEngine.Debug.Log("enter");
+                //UnityEngine.Debug.Log(body.sharedMaterial);
             }
 
         }
@@ -83,8 +84,8 @@ public class playerMovement : MonoBehaviour
         if (collision.tag != "Player")
         {
             body.sharedMaterial = groundMat;
-            UnityEngine.Debug.Log("exit");
-            UnityEngine.Debug.Log(body.sharedMaterial);
+            //UnityEngine.Debug.Log("exit");
+            //UnityEngine.Debug.Log(body.sharedMaterial);
         }
 
     }
@@ -100,6 +101,22 @@ public class playerMovement : MonoBehaviour
             canWalkL = true;
         }
 
+        if (collision.gameObject.tag == "wall")
+        {
+            wall = true;
+            if (faceingRight)
+            {
+                canWalkR = false;
+            }
+            else
+            {
+                canWalkL = false;
+            }
+        }
+        else
+        {
+            wall = false;
+        }
     }
 
     void OnCollisionStay2D(Collision2D collision)
@@ -110,12 +127,37 @@ public class playerMovement : MonoBehaviour
         }
         //UnityEngine.Debug.Log("col stay");
 
-
+        //moving wall
+        if (collision.gameObject.tag == "movingWall")
+        {
+            wall = true;
+            if (faceingRight)
+            {
+                canWalkR = false;
+            }
+            else
+            {
+                canWalkL = false;
+            }
+        }
+        else
+        {
+           // wall = true;
+        }
+        
     }
 
     void OnCollisionExit2D(Collision2D collision)
     {
         canJump = false;
+
+        
+        if (collision.gameObject.tag == "movingWall")
+        {
+            canWalkL = true;
+            canWalkR = true;
+        }
+        
 
     }
 
@@ -176,15 +218,16 @@ public class playerMovement : MonoBehaviour
         //4 works for walk off speed
         else
         {
-            if (faceingRight && enter && once)
+            if (faceingRight && enter && once && !wall)
             {
-
+               // Debug.Log("Fault");
                 body.AddForce(transform.right * walkOffSpeed, ForceMode2D.Impulse);
                 once = false;
             }
 
-            if (!faceingRight && enter && once)
+            if (!faceingRight && enter && once && !wall)
             {
+                //Debug.Log("Fault");
                 body.AddForce(-transform.right * walkOffSpeed, ForceMode2D.Impulse);
                 once = false;
             }
@@ -231,7 +274,7 @@ public class playerMovement : MonoBehaviour
             canJump = false;
             atMaxJump = false;
             timer = 0;
-            UnityEngine.Debug.Log("jump");
+           // UnityEngine.Debug.Log("jump");
         }
 
 
@@ -265,16 +308,37 @@ public class playerMovement : MonoBehaviour
     }
 
     void changeGravity()
-    {
-        // height = body.position.y;
-        //height = height
+    { 
+        height = body.position.y;
+        
 
-        // Physics2D.gravity = new Vector2(0, -5);
+        if(height < 65)
+        {
+            body.gravityScale = 4;
+        }
+        else if(height <= 110)
+        {
+            body.gravityScale = 3;
+        }
+        else if(height <= 170)
+        {
+            
+            body.gravityScale = 2;
+        }
+
+        else if(height <= 280)
+        {
+            body.gravityScale = 1;
+        }
+
+        else
+        {
+            body.gravityScale = 0;
+        }
 
 
 
-
-        // body.gravityScale = 1;
+        
     }
 }
 
