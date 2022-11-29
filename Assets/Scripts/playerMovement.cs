@@ -29,8 +29,8 @@ public class playerMovement : MonoBehaviour
     Transform trans;
     SpriteRenderer spriteRend;
 
-    bool canWalkR = true;
-    bool canWalkL = true;
+    public bool canWalkR = true;
+    public bool canWalkL = true;
 
     bool once;
     bool wall;
@@ -62,33 +62,45 @@ public class playerMovement : MonoBehaviour
     }
 
     //Start of Created Methods/Functions
-
     void OnTriggerEnter2D(Collider2D collision)
     {
-
-        if (collision.tag != "Player")
-        {
-            if (canJump == false)
-            {
-                body.sharedMaterial = bounceMat;
-                //UnityEngine.Debug.Log("enter");
-                //UnityEngine.Debug.Log(body.sharedMaterial);
-            }
-
+        if (collision.tag != "Player") 
+        { 
+            body.sharedMaterial = groundMat;
         }
-
     }
     void OnTriggerExit2D(Collider2D collision)
     {
-        //string tagVar = collision.Get();
-        if (collision.tag != "Player")
-        {
-            body.sharedMaterial = groundMat;
-            //UnityEngine.Debug.Log("exit");
-            //UnityEngine.Debug.Log(body.sharedMaterial);
-        }
-
+        body.sharedMaterial = bounceMat;
     }
+    //new tiggers above
+
+    //void OnTriggerEnter2D(Collider2D collision)
+    //{
+
+    //    if (collision.tag != "Player")
+    //    {
+    //        if (canJump == false)
+    //        {
+    //            body.sharedMaterial = bounceMat;
+    //            //UnityEngine.Debug.Log("enter");
+    //            //UnityEngine.Debug.Log(body.sharedMaterial);
+    //        }
+
+    //    }
+
+    //}
+    //void OnTriggerExit2D(Collider2D collision)
+    //{
+    //    //string tagVar = collision.Get();
+    //    if (collision.tag != "Player")
+    //    {
+    //        body.sharedMaterial = groundMat;
+    //        //UnityEngine.Debug.Log("exit");
+    //        //UnityEngine.Debug.Log(body.sharedMaterial);
+    //    }
+
+    //}
 
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -124,6 +136,8 @@ public class playerMovement : MonoBehaviour
         if (collision.gameObject.tag == "Ground")
         {
             canJump = true;
+            
+
         }
         //UnityEngine.Debug.Log("col stay");
 
@@ -262,7 +276,6 @@ public class playerMovement : MonoBehaviour
             body.AddForce(transform.up * jumpPowerMax * jumpPower, ForceMode2D.Impulse);
             if (Input.GetKey(KeyCode.D))
             {
-
                 body.AddForce(transform.right * sidejumpPowerMax * jumpPower, ForceMode2D.Impulse);
                 faceingRight = true;
             }
