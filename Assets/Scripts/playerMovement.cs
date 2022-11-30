@@ -214,7 +214,7 @@ public class playerMovement : MonoBehaviour
         if (canJump)
         {
             enter = false;
-            if (Input.GetKey(KeyCode.D))// D to move right at walkSpeed
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))// D to move right at walkSpeed
             {
                 if (canWalkR == true)
                 {
@@ -230,7 +230,7 @@ public class playerMovement : MonoBehaviour
                 }
 
             }
-            if (Input.GetKey(KeyCode.A))// A to move -right at walkSpeed
+            else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))// A to move -right at walkSpeed
             {
                 if (canWalkL == true)
                 {
@@ -240,6 +240,10 @@ public class playerMovement : MonoBehaviour
                     canWalkR = true;
                     enter = true;
                 }
+            }
+            else
+            {
+                body.velocity = new Vector3(0f, 0f, 0f);
             }
             once = true;
         }
@@ -291,12 +295,12 @@ public class playerMovement : MonoBehaviour
 
 
             body.AddForce(transform.up * jumpPowerMax * jumpPower, ForceMode2D.Impulse);
-            if (Input.GetKey(KeyCode.D))
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
             {
                 body.AddForce(transform.right * sidejumpPowerMax * jumpPower, ForceMode2D.Impulse);
                 faceingRight = true;
             }
-            if (Input.GetKey(KeyCode.A))
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
             {
                 body.AddForce(-transform.right * sidejumpPowerMax * jumpPower, ForceMode2D.Impulse);
                 faceingRight = false;
