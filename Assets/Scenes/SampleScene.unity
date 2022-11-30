@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 29135527}
   m_Layer: 0
   m_Name: Corner tile
-  m_TagString: Untagged
+  m_TagString: corner
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -184,7 +184,7 @@ GameObject:
   - component: {fileID: 61303274}
   m_Layer: 0
   m_Name: Corner
-  m_TagString: Untagged
+  m_TagString: corner
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15143,25 +15143,9 @@ CompositeCollider2D:
       - X: -740000000
         Y: -910000000
     - - X: -870000000
-        Y: -920000100
-      - X: -869999959
-        Y: -920000100
-      - X: -869999900
-        Y: -920000041
-      - X: -869999900
-        Y: -879999959
-      - X: -869999959
-        Y: -879999900
-      - X: -880000041
-        Y: -879999900
-      - X: -880000100
-        Y: -879999959
-      - X: -880000100
-        Y: -920000041
-      - X: -880000041
-        Y: -920000100
+        Y: -880000100
       - X: -880000000
-        Y: -920000100
+        Y: -880000100
       - X: -880000000
         Y: -960000000
       - X: -870000000
@@ -15189,8 +15173,8 @@ CompositeCollider2D:
       - {x: -127, y: -3.0000293}
       - {x: -126.99998, y: -91}
     - - {x: -87.00003, y: -96}
-      - {x: -87.00002, y: -87.999985}
-      - {x: -88.000015, y: -88.00002}
+      - {x: -87.00003, y: -88.000015}
+      - {x: -88, y: -88.00004}
       - {x: -87.99997, y: -96}
     - - {x: -119.00003, y: -96}
       - {x: -119.00003, y: -92}
