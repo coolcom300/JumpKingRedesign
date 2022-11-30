@@ -71,7 +71,10 @@ public class playerMovement : MonoBehaviour
     }
     void OnTriggerExit2D(Collider2D collision)
     {
-        body.sharedMaterial = bounceMat;
+        if (collision.tag == "Ground")
+        {
+            body.sharedMaterial = bounceMat;
+        }
     }
     //new tiggers above
 
