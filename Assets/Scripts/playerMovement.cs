@@ -290,6 +290,7 @@ public class playerMovement : MonoBehaviour
             canJump = false;
             atMaxJump = false;
             timer = 0;
+            body.sharedMaterial = bounceMat;
            // UnityEngine.Debug.Log("jump");
         }
 
