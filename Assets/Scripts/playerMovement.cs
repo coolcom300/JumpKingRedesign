@@ -24,6 +24,7 @@ public class playerMovement : MonoBehaviour
     public float walkOffSpeed;
 
     bool enter = false;
+    bool corner;
 
     Rigidbody2D body;
     Transform trans;
@@ -132,6 +133,12 @@ public class playerMovement : MonoBehaviour
         {
             wall = false;
         }
+
+        if(collision.gameObject.tag == "corner")
+        {
+            corner = true;
+        }
+
     }
 
     void OnCollisionStay2D(Collision2D collision)
@@ -173,6 +180,11 @@ public class playerMovement : MonoBehaviour
         {
             canWalkL = true;
             canWalkR = true;
+        }
+
+        if(collision.gameObject.tag != "corner")
+        {
+            corner = false;
         }
         
 
@@ -235,8 +247,10 @@ public class playerMovement : MonoBehaviour
         //4 works for walk off speed
         else
         {
-            if (faceingRight && enter && once && !wall)
+            if (faceingRight && enter && once && !wall && !corner)
             {
+
+                
                // Debug.Log("Fault");
                 body.AddForce(transform.right * walkOffSpeed, ForceMode2D.Impulse);
                 once = false;
