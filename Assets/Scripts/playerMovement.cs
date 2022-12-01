@@ -38,6 +38,8 @@ public class playerMovement : MonoBehaviour
     //Vector3 initialGravity = Physics2D.gravity;
 
 
+    public Animator animator;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -227,6 +229,8 @@ public class playerMovement : MonoBehaviour
                     trans.rotation = Quaternion.Euler(0, 0, 0);
                     canWalkL = true;
                     enter = true;
+
+                    animator.SetFloat("Speed", walkSpeed);
                 }
 
             }
@@ -239,7 +243,14 @@ public class playerMovement : MonoBehaviour
                     trans.rotation = Quaternion.Euler(0, 0, 0);
                     canWalkR = true;
                     enter = true;
+
+                    animator.SetFloat("Speed", Mathf.Abs(walkSpeed));
                 }
+            }
+
+            else
+            {
+                animator.SetFloat("Speed", 0);
             }
             
             once = true;
