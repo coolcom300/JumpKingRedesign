@@ -35,8 +35,16 @@ public class playerMovement : MonoBehaviour
 
     bool once;
     bool wall;
+
+
+    //used for detection of animation
+    bool inY = false;
+
+
     //Vector3 initialGravity = Physics2D.gravity;
 
+
+    public Animator animator;
 
     // Start is called before the first frame update
     void Start()
@@ -58,6 +66,19 @@ public class playerMovement : MonoBehaviour
         SpriteStuff();
         Jump();
         changeGravity();
+
+        //for animation
+        animator.SetFloat("velocityChange", body.velocity.y);
+
+        if(body.velocity.y > 0 || inY)
+        {
+            inY = true;
+            if (body.velocity.y == 0)
+            {
+                animator.SetBool("isJump", false);
+                animator.SetBool("spaceUp", false);
+            }
+        }
 
 
     }
@@ -146,7 +167,9 @@ public class playerMovement : MonoBehaviour
         if (collision.gameObject.tag == "Ground")
         {
             canJump = true;
-            
+
+            //for animation
+            inY = false;
 
         }
         //UnityEngine.Debug.Log("col stay");
@@ -227,6 +250,9 @@ public class playerMovement : MonoBehaviour
                     trans.rotation = Quaternion.Euler(0, 0, 0);
                     canWalkL = true;
                     enter = true;
+
+                    //for animation
+                    animator.SetFloat("Speed", walkSpeed);
                 }
 
             }
@@ -239,7 +265,16 @@ public class playerMovement : MonoBehaviour
                     trans.rotation = Quaternion.Euler(0, 0, 0);
                     canWalkR = true;
                     enter = true;
+                    
+                    //for animation
+                    animator.SetFloat("Speed", Mathf.Abs(walkSpeed));
                 }
+            }
+
+            else
+            {
+                //for animation
+                animator.SetFloat("Speed", 0);
             }
             
             once = true;
@@ -280,8 +315,12 @@ public class playerMovement : MonoBehaviour
 
     void Jump()//the jump function
     {
+       
+       
         if (Input.GetKeyUp(KeyCode.Space) || atMaxJump)
         {
+            //for animation
+            animator.SetBool("spaceUp", true);
             //enter = true;
 
             if (timer > chargeTime)//sets for max
@@ -306,22 +345,25 @@ public class playerMovement : MonoBehaviour
             atMaxJump = false;
             timer = 0;
             //body.sharedMaterial = bounceMat;
-           // UnityEngine.Debug.Log("jump");
+            // UnityEngine.Debug.Log("jump");
+
+            
         }
 
 
-
-
+       
     }
 
     void ChargeJump()//charges Jump
     {
         if (canJump)
         {
+            
             timer += Time.deltaTime;
             if (timer >= chargeTime)
             {
                 atMaxJump = true;
+               
                 Jump();
             }
             canWalkL = false;
@@ -334,6 +376,9 @@ public class playerMovement : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Space))
         {
+            //for animation
+            animator.SetFloat("Speed", 0);
+            animator.SetBool("isJump", true);
             ChargeJump();
         }
 
