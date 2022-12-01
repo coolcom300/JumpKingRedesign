@@ -328,9 +328,9 @@ public class playerMovement : MonoBehaviour
                 timer = chargeTime;
             }
             jumpPower = timer / chargeTime;
-            if (jumpPower < 0.1f)
+            if (jumpPower < 0.3f)
             {
-                jumpPower = 0.1f;
+                jumpPower = 0.3f;
             }
 
             body.AddForce(transform.up * jumpPowerMax * jumpPower, ForceMode2D.Impulse);
