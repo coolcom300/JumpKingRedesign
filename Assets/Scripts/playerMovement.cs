@@ -332,21 +332,23 @@ public class playerMovement : MonoBehaviour
             {
                 jumpPower = 0.3f;
             }
-
-            body.AddForce(transform.up * jumpPowerMax * jumpPower, ForceMode2D.Impulse);
-            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+            if (canJump)
             {
-                body.AddForce(transform.right * sidejumpPowerMax * jumpPower, ForceMode2D.Impulse);
-                faceingRight = true;
+                body.AddForce(transform.up * jumpPowerMax * jumpPower, ForceMode2D.Impulse);
+                if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+                {
+                    body.AddForce(transform.right * sidejumpPowerMax * jumpPower, ForceMode2D.Impulse);
+                    faceingRight = true;
+                }
+                if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+                {
+                    body.AddForce(-transform.right * sidejumpPowerMax * jumpPower, ForceMode2D.Impulse);
+                    faceingRight = false;
+                }
+                canJump = false;
+                atMaxJump = false;
+                timer = 0;
             }
-            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-            {
-                body.AddForce(-transform.right * sidejumpPowerMax * jumpPower, ForceMode2D.Impulse);
-                faceingRight = false;
-            }
-            canJump = false;
-            atMaxJump = false;
-            timer = 0;
             //body.sharedMaterial = bounceMat;
             // UnityEngine.Debug.Log("jump");
 
