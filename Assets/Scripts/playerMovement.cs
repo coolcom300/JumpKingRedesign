@@ -241,7 +241,10 @@ public class playerMovement : MonoBehaviour
                     enter = true;
                 }
             }
-            
+            else
+            {
+                body.velocity = new Vector3(0f, 0f, 0f);
+            }
             once = true;
         }
 
@@ -305,7 +308,7 @@ public class playerMovement : MonoBehaviour
             canJump = false;
             atMaxJump = false;
             timer = 0;
-            //body.sharedMaterial = bounceMat;
+            body.sharedMaterial = bounceMat;
            // UnityEngine.Debug.Log("jump");
         }
 
