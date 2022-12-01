@@ -328,7 +328,10 @@ public class playerMovement : MonoBehaviour
                 timer = chargeTime;
             }
             jumpPower = timer / chargeTime;
-
+            if (jumpPower < 0.1f)
+            {
+                jumpPower = 0.1f;
+            }
 
             body.AddForce(transform.up * jumpPowerMax * jumpPower, ForceMode2D.Impulse);
             if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
