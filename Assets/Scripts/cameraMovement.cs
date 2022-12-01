@@ -40,6 +40,12 @@ public class cameraMovement : MonoBehaviour
         {
             camheight = 15;
         }
+        //NEW STUFF
+        if (camheight >= 400)
+        {
+            camheight = 400;
+        }
+        //NEW STUFF
         trans.position = new Vector3(trans.position.x, camheight , trans.position.z); 
     }
     // Christians camera code
